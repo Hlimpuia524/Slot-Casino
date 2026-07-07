@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Fortune Garuda 500</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:url('https://i.imgur.com/kL9wR2M.jpg') no-repeat center center fixed;background-size:cover;color:white;text-align:center;font-family:'Arial Black',Arial;margin:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;background:rgba(0,0,0,0.85)}
+.back{color:gold;text-decoration:none;font-size:16px;font-weight:bold}
+.balance{color:gold;font-size:18px}
+.title{background:linear-gradient(#8B0000,#000);padding:8px;color:gold;font-size:24px;text-shadow:0 0 10px gold}
+.main{display:flex;justify-content:center;gap:10px;margin:15px auto}
+.reels{display:grid;grid-template-columns:repeat(3,100px);gap:5px;background:rgba(0,0,0,0.8);padding:10px;border:4px solid gold;border-radius:15px;box-shadow:0 0 20px gold}
+.reel{width:100px;height:100px;background:#111;border:2px solid gold;border-radius:10px;overflow:hidden}
+.reel img{width:100%;height:100%;object-fit:cover}
+.multi{width:80px;background:rgba(0,0,0,0.8);padding:5px;border:3px solid gold;border-radius:10px}
+.multi div{background:orange;color:black;margin:5px;padding:6px;border-radius:8px;font-weight:bold;font-size:14px}
+.spin-area{margin-top:10px}
+#spinBtn{width:110px;height:110px;border-radius:50%;background:radial-gradient(gold,orange);color:black;font-size:22px;font-weight:bold;border:8px solid #8B0000;cursor:pointer;box-shadow:0 0 20px gold}
+#win{font-size:20px;color:yellow;margin-top:8px;font-weight:bold}
+#bet{color:white;font-size:16px}
+#free{color:orange}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="back">← YY6.com</a>
+  <div class="balance">Balance: <span id="coins">1000</span> | <span id="free">FREE: 0</span></div>
+</div>
+<div class="title">FORTUNE GARUDA 500</div>
+
+<div class="main">
+  <div class="reels">
+    <div class="reel"><img id="r1" src="https://i.imgur.com/2JkF4cN.png"></div><div class="reel"><img id="r2" src="https://i.imgur.com/9xL4zQv.png"></div><div class="reel"><img id="r3" src="https://i.imgur.com/9xL4zQv.png"></div>
+    <div class="reel"><img id="r4" src="https://i.imgur.com/2JkF4cN.png"></div><div class="reel"><img id="r5" src="https://i.imgur.com/9xL4zQv.png"></div><div class="reel"><img id="r6" src="https://i.imgur.com/9xL4zQv.png"></div>
+    <div class="reel"><img id="r7" src="https://i.imgur.com/2JkF4cN.png"></div><div class="reel"><img id="r8" src="https://i.imgur.com/9xL4zQv.png"></div><div class="reel"><img id="r9" src="https://i.imgur.com/9xL4zQv.png"></div>
+  </div>
+  <div class="multi">
+    <div>100x</div><div>500x</div><div style="background:purple;color:white">EX NUDGE</div><div>500x</div><div>100x</div>
+  </div>
+</div>
+
+<div class="spin-area">
+  <div id="bet">Bet: 20 COINS</div>
+  <button id="spinBtn">SPIN</button>
+  <div id="win">WIN: 0</div>
+</div>
+
+<script>
+let coins = parseInt(localStorage.getItem("walletCoins")) || 1000;
+let freespins = 0;
+let bet = 20;
+document.getElementById("coins").innerText = coins;
+
+// 0=Garuda/WILD 1=RedGem 2=BlueGem 3=SCATTER
+let symbols = [
+  "https://i.imgur.com/2JkF4cN.png",
+  "https://i.imgur.com/1PbK8zM.png",
+  "https://i.imgur.com/9xL4zQv.png",
+  "https://i.imgur.com/5ZxL1mQ.png"
+];
+
+function saveCoins() {localStorage.setItem("walletCoins", coins);}
+
+document.getElementById("spinBtn").onclick = function() {
+  if(freespins == 0 && coins < bet){ alert("Not enough coins!"); return; }
+  if(freespins == 0) coins -= bet; else freespins--;
+  
+  let results = [];
+  for(let i=1; i<=9; i++){
+    let rand = Math.floor(Math.random()*4);
+    document.getElementById("r"+i).src = symbols;
+    results.push(rand);
+  }
+
+  let win = 0;
+  let multi = 1;
+  let msg = "Try Again!";
+
+  // EX NUDGE: Reel 1 full Garuda = x5
+  if(results[0]==0 && results[3]==0 && results[6]==0) {
+    multi = 5;
+    msg = "EX NUDGE x5!";
+  }
+
+  // Win: 3 same in a row
+  for(let row=0; row<3; row++){
+    if(results[row*3] == results[row*3+1] && results[row*3+1] == results[row*3+2] && results[row*3]!=3) {
+      win += 50 * bet;
+      msg = "BIG WIN!";
+    }
+  }
+
+  // SCATTER: 3 anywhere = 8 Free Spins
+  let scatter = results.filter(x => x == 3).length;
+  if(scatter >= 3) {
+    freespins += 8;
+    msg = "8 FREE SPINS!";
+  }
+
+  // Random 100x 500x
+  if(Math.random() < 0.03) multi = Math.random() < 0.5? 100 : 500;
+
+  coins += win * multi;
+  document.getElementById("coins").innerText = coins;
+  document.getElementById("free").innerText = "FREE: " + freespins;
+  document.getElementById("win").innerText = "WIN: " + (win * multi);
+  saveCoins();
+}
+</script>
+</body>
+</html>
