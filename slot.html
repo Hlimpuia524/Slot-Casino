@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Classic 777 Slot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#000;color:white;text-align:center;font-family:Arial}
+.topbar{display:flex;justify-content:space-between;padding:10px}
+.back{color:gold;text-decoration:none;font-size:18px}
+.balance{color:lime;font-size:22px;font-weight:bold}
+.slot-box{background:linear-gradient(red, darkred);padding:20px;border-radius:20px;border:5px solid gold;margin:20px}
+.reels{display:flex;justify-content:center;gap:10px}
+.reel{width:100px;height:100px;background:#fff;border:4px solid gold;border-radius:10px;overflow:hidden}
+.reel img{width:100%;height:100%;object-fit:cover}
+#spinBtn{font-size:28px;padding:15px 50px;background:gold;color:black;border:none;border-radius:15px;font-weight:bold;margin-top:20px}
+#spinBtn:active{transform:scale(0.95)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="back">← BACK TO MENU</a>
+  <div class="balance">COINS: <span id="coins">1000</span></div>
+</div>
+
+<h1>CLASSIC 777</h1>
+<div class="slot-box">
+  <div class="reels">
+    <div class="reel"><img id="r1" src="https://i.imgur.com/8KzQb1P.png"></div>
+    <div class="reel"><img id="r2" src="https://i.imgur.com/8KzQb1P.png"></div>
+    <div class="reel"><img id="r3" src="https://i.imgur.com/8KzQb1P.png"></div>
+  </div>
+</div>
+
+<button id="spinBtn">SPIN -10 COINS</button>
+<p id="msg">Good Luck!</p>
+
+<script>
+let coins = 1000;
+let images = [
+  "https://i.imgur.com/8KzQb1P.png", // 7
+  "https://i.imgur.com/4QvZ9xL.png", // Cherry
+  "https://i.imgur.com/9xL4zQv.png", // Diamond
+  "https://i.imgur.com/1PbK8zM.png" // BAR
+];
+
+document.getElementById("spinBtn").onclick = function() {
+  if(coins < 10){ alert("Not enough coins!"); return; }
+  coins -= 10;
+  
+  let rand1 = Math.floor(Math.random()*4);
+  let rand2 = Math.floor(Math.random()*4);
+  let rand3 = Math.floor(Math.random()*4);
+  
+  document.getElementById("r1").src = images[rand1];
+  document.getElementById("r2").src = images[rand2];
+  document.getElementById("r3").src = images[rand3];
+  
+  if(rand1 == rand2 && rand2 == rand3) {
+    coins += 100; 
+    document.getElementById("msg").innerText = "JACKPOT! +100 COINS!";
+  } else {
+    document.getElementById("msg").innerText = "Try Again!";
+  }
+  document.getElementById("coins").innerText = coins;
+}
+</script>
+</body>
+</html>
