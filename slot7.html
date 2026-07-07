@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Cherry Blast Slot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:url('https://i.imgur.com/6HgJ4kM.jpg') no-repeat center fixed;background-size:cover;color:white;text-align:center;font-family:Arial;margin:0}
+.topbar{display:flex;justify-content:space-between;padding:10px;background:rgba(139,0,0,0.8)}
+.back{color:pink;text-decoration:none;font-size:18px;font-weight:bold}
+.balance{color:lime;font-size:22px;font-weight:bold}
+.slot-box{background:rgba(220,20,60,0.9);padding:20px;border-radius:20px;border:5px solid pink;margin:20px auto;max-width:400px;backdrop-filter:blur(5px)}
+.reels{display:flex;justify-content:center;gap:10px}
+.reel{width:100px;height:100px;background:#fff;border:4px solid pink;border-radius:10px;overflow:hidden}
+.reel img{width:100%;height:100%;object-fit:cover}
+#spinBtn{font-size:28px;padding:15px 50px;background:pink;color:red;border:none;border-radius:15px;font-weight:bold;margin-top:20px;cursor:pointer}
+#msg{font-size:20px;color:pink;height:30px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html" class="back">← BACK TO MENU</a>
+  <div class="balance">COINS: <span id="coins">1000</span></div>
+</div>
+<h1 style="text-shadow:0 0 10px pink">CHERRY BLAST - CASCADE</h1>
+<div class="slot-box">
+  <div class="reels">
+    <div class="reel"><img id="r1" src="https://i.imgur.com/4QvZ9xL.png"></div>
+    <div class="reel"><img id="r2" src="https://i.imgur.com/4QvZ9xL.png"></div>
+    <div class="reel"><img id="r3" src="https://i.imgur.com/4QvZ9xL.png"></div>
+  </div>
+</div>
+<button id="spinBtn">SPIN -15 COINS</button>
+<p id="msg">Match 3 for Cascade Bonus!</p>
+<script>
+let coins = parseInt(localStorage.getItem("walletCoins")) || 1000;
+document.getElementById("coins").innerText = coins;
+let images = ["https://i.imgur.com/4QvZ9xL.png","https://i.imgur.com/8KzQb1P.png","https://i.imgur.com/1PbK8zM.png"];
+function saveCoins() {localStorage.setItem("walletCoins", coins);}
+document.getElementById("spinBtn").onclick = function() {
+  if(coins < 15){ alert("Not enough coins!"); return; }
+  coins -= 15; let totalWin = 0;
+
+  for(let cascade=0; cascade<3; cascade++){
+    let rand1 = Math.floor(Math.random()*3);let rand2 = Math.floor(Math.random()*3);let rand3 = Math.floor(Math.random()*3);
+    document.getElementById("r1").src = images[rand1];document.getElementById("r2").src = images[rand2];document.getElementById("r3").src = images[rand3];
+    if(rand1 == rand2 && rand2 == rand3) {totalWin += 40 * (cascade+1);}
+    if(cascade < 2) setTimeout(()=>{}, 300);
+  }
+
+  coins += totalWin;
+  document.getElementById("msg").innerText = totalWin>0? "CASCADE WIN! +" + totalWin : "Try Again!";
+  document.getElementById("coins").innerText = coins;saveCoins();
+}
+</script>
+</body>
+</html>
